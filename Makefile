@@ -32,6 +32,10 @@ api:
 	       $(API_PROTO_FILES)
 
 .PHONY: build
+# wire
+wire:
+	cd cmd/kratos-realworld/ && wire
+
 # build
 build:
 	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
