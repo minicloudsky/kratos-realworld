@@ -36,6 +36,11 @@ api:
 wire:
 	cd cmd/kratos-realworld/ && wire
 
+.PHONY: run
+# wire
+run:
+	kratos run
+
 # build
 build:
 	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...

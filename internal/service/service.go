@@ -14,11 +14,11 @@ var ProviderSet = wire.NewSet(NewRealWorldService)
 // RealWorldService is a RealWorld service.
 type RealWorldService struct {
 	v1.UnimplementedRealworldServer
-	uc  *biz.RealWorlderUsecase
+	uc  *biz.UserUseCase
 	log *log.Helper
 }
 
 // NewRealWorldService new RealWorld service.
-func NewRealWorldService(uc *biz.RealWorlderUsecase, logger log.Logger) *RealWorldService {
+func NewRealWorldService(uc *biz.UserUseCase, logger log.Logger) *RealWorldService {
 	return &RealWorldService{uc: uc, log: log.NewHelper(logger)}
 }
