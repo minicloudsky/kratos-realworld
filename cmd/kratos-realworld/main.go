@@ -60,7 +60,9 @@ func main() {
 			file.NewSource(flagconf),
 		),
 	)
-	defer c.Close()
+	defer func() {
+		_ = c.Close()
+	}()
 
 	if err := c.Load(); err != nil {
 		panic(err)
@@ -71,7 +73,7 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
+	app, cleanup, err := initApp(bc.Server, bc.Data, bc.Jwt, logger)
 	if err != nil {
 		panic(err)
 	}

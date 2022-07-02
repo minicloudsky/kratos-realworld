@@ -6,6 +6,7 @@ import (
 )
 
 func (s *RealWorldService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.UserReply, error) {
+	_, _ = s.uc.Login(ctx, req.User.Email, req.User.Password)
 	return &pb.UserReply{
 		User: &pb.UserReply_User{
 			Email:    "1397111131@qq.com",
@@ -17,8 +18,20 @@ func (s *RealWorldService) Login(ctx context.Context, req *pb.LoginRequest) (*pb
 	}, nil
 }
 
-func (s *RealWorldService) Register(context.Context, *pb.RegisterRequest) (*pb.UserReply, error) {
-	return &pb.UserReply{}, nil
+func (s *RealWorldService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.UserReply, error) {
+	user, err := s.uc.Register(ctx, req.User.Username, req.User.Email, req.User.Password)
+	if err != nil {
+		panic(err)
+	}
+	return &pb.UserReply{
+		User: &pb.UserReply_User{
+			Email:    user.Email,
+			Token:    user.Token,
+			Username: user.Email,
+			Bio:      user.Bio,
+			Image:    user.Image,
+		},
+	}, nil
 }
 
 func (s *RealWorldService) GetArticle(context.Context, *pb.GetArticleRequest) (*pb.SingleArticleReply, error) {

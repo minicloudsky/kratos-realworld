@@ -27,20 +27,8 @@ type tagRepo struct {
 	log  *log.Helper
 }
 
-type profileRepo struct {
-	data *Data
-	log  *log.Helper
-}
-
 func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	return &userRepo{
-		data: data,
-		log:  log.NewHelper(logger),
-	}
-}
-
-func NewProfileRepo(data *Data, logger log.Logger) biz.ProfileRepo {
-	return &profileRepo{
 		data: data,
 		log:  log.NewHelper(logger),
 	}
@@ -68,6 +56,23 @@ func NewTagRepo(data *Data, logger log.Logger) biz.TagRepo {
 }
 
 func (u *userRepo) CreateUser(ctx context.Context, user *biz.User) error {
-	//TODO implement me
+	_ = u.CreateUser(ctx, user)
 	return nil
+}
+
+func (u *userRepo) GetUserByEmail(ctx context.Context, email string) (*biz.User, error) {
+	_, _ = u.GetUserByEmail(ctx, email)
+	return nil, nil
+}
+
+type profileRepo struct {
+	data *Data
+	log  *log.Helper
+}
+
+func NewProfileRepo(data *Data, logger log.Logger) biz.ProfileRepo {
+	return &profileRepo{
+		data: data,
+		log:  log.NewHelper(logger),
+	}
 }

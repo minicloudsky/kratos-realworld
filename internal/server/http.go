@@ -1,8 +1,12 @@
 package server
 
 import (
+	"context"
+	"fmt"
+	"github.com/go-kratos/kratos/v2/middleware/selector"
 	v1 "kratos-realworld/api/realworld/v1"
 	"kratos-realworld/internal/conf"
+	"kratos-realworld/internal/pkg/middleware/auth"
 	"kratos-realworld/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -10,11 +14,32 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 )
 
+// NewSkipRoutersMatcher 通过正则匹配取消jwt token验证
+func NewSkipRoutersMatcher() selector.MatchFunc {
+
+	allowList := make(map[string]struct{})
+	// /包名.服务名/方法名
+	allowList["/realworld.v1.Realworld/Login"] = struct{}{}
+	allowList["/realworld.v1.Realworld/Register"] = struct{}{}
+	return func(ctx context.Context, operation string) bool {
+		if _, ok := allowList[operation]; ok {
+			return false
+		}
+		return true
+	}
+}
+
 // NewHTTPServer new a HTTP server.
-func NewHTTPServer(c *conf.Server, realWorlder *service.RealWorldService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, jwt *conf.JWT, realWorlder *service.RealWorldService, logger log.Logger) *http.Server {
+	fmt.Println("logger: ", logger)
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
+			//tracing.Server(),
+			//logging.Server(logger),
+			//auth.JWTAuth(jwt.Token),
+
+			selector.Server(auth.JWTAuth(jwt.Token)).Match(NewSkipRoutersMatcher()).Build(),
 		),
 	}
 	if c.Http.Network != "" {

@@ -1,6 +1,7 @@
 package data
 
 import (
+	"fmt"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	"gorm.io/driver/mysql"
@@ -9,7 +10,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewUserRepo)
+var ProviderSet = wire.NewSet(NewData, NewDB, NewUserRepo, NewProfileRepo, NewTagRepo, NewArticleRepo, NewCommentRepo)
 
 // Data .
 type Data struct {
@@ -22,6 +23,7 @@ func NewData(c *conf.Data, logger log.Logger, db *gorm.DB) (*Data, func(), error
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
+	fmt.Println("c: ", c.Database.Source)
 	return &Data{db: db}, cleanup, nil
 }
 

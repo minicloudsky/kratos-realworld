@@ -1,6 +1,7 @@
 version: '3'
 services:
   rwdb:
+    container_name: mysql
     image: mysql:8
     hostname: user-db
     ports:
@@ -8,4 +9,4 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - "./data:/var/lib/mysql"
+      - "/Users/minicloudsky/docker_volumes/mysql:/var/lib/mysql"

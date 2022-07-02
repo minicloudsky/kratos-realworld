@@ -3,14 +3,11 @@ package biz
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
-	v1 "kratos-realworld/api/realworld/v1"
-
-	"github.com/go-kratos/kratos/v2/errors"
 )
 
 var (
-	// ErrUserNotFound is user not found.
-	ErrUserNotFound = errors.NotFound(v1.ErrorReason_USER_NOT_FOUND.String(), "user not found")
+// ErrUserNotFound is user not found.
+//ErrUserNotFound = errors.NotFound(v1.ErrorReason_USER_NOT_FOUND.String(), "user not found")
 )
 
 type ArticleRepo interface {
@@ -30,7 +27,7 @@ type SocialUseCase struct {
 	log *log.Helper
 }
 
-func NewSocialUseCase(ar ArticleRepo, cr CommentRepo, tr CommentRepo, logger log.Logger) *SocialUseCase {
+func NewSocialUseCase(ar ArticleRepo, cr CommentRepo, tr TagRepo, logger log.Logger) *SocialUseCase {
 	return &SocialUseCase{
 		ar:  ar,
 		cr:  cr,
@@ -40,5 +37,6 @@ func NewSocialUseCase(ar ArticleRepo, cr CommentRepo, tr CommentRepo, logger log
 }
 
 func (uc *SocialUseCase) CreateArticle(ctx context.Context) error {
+	_ = uc.CreateArticle(ctx)
 	return nil
 }
