@@ -56,12 +56,12 @@ func NewTagRepo(data *Data, logger log.Logger) biz.TagRepo {
 }
 
 func (u *userRepo) CreateUser(ctx context.Context, user *biz.User) error {
-	_ = u.CreateUser(ctx, user)
+	//_ = u.CreateUser(ctx, user)
 	return nil
 }
 
 func (u *userRepo) GetUserByEmail(ctx context.Context, email string) (*biz.User, error) {
-	_, _ = u.GetUserByEmail(ctx, email)
+	//_, _ = u.GetUserByEmail(ctx, email)
 	return nil, nil
 }
 

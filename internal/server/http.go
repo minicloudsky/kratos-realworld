@@ -4,14 +4,17 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
+	"github.com/gorilla/handlers"
 	v1 "kratos-realworld/api/realworld/v1"
 	"kratos-realworld/internal/conf"
+	"kratos-realworld/internal/errorhandler"
 	"kratos-realworld/internal/pkg/middleware/auth"
 	"kratos-realworld/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	nethttp "net/http"
 )
 
 // NewSkipRoutersMatcher 通过正则匹配取消jwt token验证
@@ -33,6 +36,7 @@ func NewSkipRoutersMatcher() selector.MatchFunc {
 func NewHTTPServer(c *conf.Server, jwt *conf.JWT, realWorlder *service.RealWorldService, logger log.Logger) *http.Server {
 	fmt.Println("logger: ", logger)
 	var opts = []http.ServerOption{
+		http.ErrorEncoder(errorhandler.ErrorEncoder),
 		http.Middleware(
 			recovery.Recovery(),
 			//tracing.Server(),
@@ -40,6 +44,20 @@ func NewHTTPServer(c *conf.Server, jwt *conf.JWT, realWorlder *service.RealWorld
 			//auth.JWTAuth(jwt.Token),
 
 			selector.Server(auth.JWTAuth(jwt.Token)).Match(NewSkipRoutersMatcher()).Build(),
+		),
+		http.Filter(
+			func(h nethttp.Handler) nethttp.Handler {
+				return nethttp.HandlerFunc(func(w nethttp.ResponseWriter, r *nethttp.Request) {
+					fmt.Println("route filter in")
+					h.ServeHTTP(w, r)
+					fmt.Println("route filter out")
+				})
+			},
+			handlers.CORS(
+				handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}),
+				handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}),
+				handlers.AllowedOrigins([]string{"*"}),
+			),
 		),
 	}
 	if c.Http.Network != "" {

@@ -3,10 +3,14 @@ package service
 import (
 	"context"
 	pb "kratos-realworld/api/realworld/v1"
+	"kratos-realworld/internal/errorhandler"
 )
 
 func (s *RealWorldService) Login(ctx context.Context, req *pb.LoginRequest) (*pb.UserReply, error) {
-	_, _ = s.uc.Login(ctx, req.User.Email, req.User.Password)
+	if len(req.User.Email) == 0 {
+		return nil, errorhandler.NewHTTPError(422, "email", "can not be empty")
+	}
+	//_, _ = s.uc.Login(ctx, req.User.Email, req.User.Password)
 	return &pb.UserReply{
 		User: &pb.UserReply_User{
 			Email:    "1397111131@qq.com",

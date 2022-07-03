@@ -7,7 +7,7 @@ import (
 
 var (
 // ErrUserNotFound is user not found.
-//ErrUserNotFound = errors.NotFound(v1.ErrorReason_USER_NOT_FOUND.String(), "user not found")
+//ErrUserNotFound = errorhandler.NotFound(v1.ErrorReason_USER_NOT_FOUND.String(), "user not found")
 )
 
 type ArticleRepo interface {
